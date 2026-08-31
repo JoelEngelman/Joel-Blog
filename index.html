@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="The personal blog of Joel Engelman — writing, ideas and reporting.">
+  <title>Joel Engelman — Blog</title>
+  <style>
+    :root {
+      --bg: #f7f7f5;
+      --paper: #ffffff;
+      --text: #171717;
+      --muted: #6b6b6b;
+      --line: #deded9;
+      --accent: #1d4ed8;
+      --accent-soft: #eef3ff;
+      --max: 1120px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.7;
+    }
+
+    a { color: inherit; }
+    button { font: inherit; }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(255,255,255,.94);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .nav {
+      max-width: var(--max);
+      margin: auto;
+      min-height: 72px;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      border: 0;
+      background: none;
+      padding: 0;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .brand-name { font-size: 1.05rem; font-weight: 750; letter-spacing: -.02em; }
+    .brand-sub { display: block; color: var(--muted); font-size: .78rem; margin-top: -3px; }
+
+    nav { display: flex; gap: 8px; }
+    nav button {
+      border: 0;
+      background: transparent;
+      padding: 9px 12px;
+      color: #555;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    nav button:hover { background: #f0f0ed; color: #111; }
+
+    main { min-height: calc(100vh - 72px); }
+    .page { display: none; }
+    .page.active { display: block; }
+
+    .home-hero {
+      max-width: var(--max);
+      margin: auto;
+      padding: 92px 24px 58px;
+      display: grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: 58px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      color: var(--accent);
+      font-size: .76rem;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      margin-bottom: 15px;
+    }
+
+    h1, h2, h3 { line-height: 1.12; letter-spacing: -.04em; }
+    .home-hero h1 { font-size: clamp(3rem, 6vw, 5.4rem); margin: 0 0 22px; max-width: 700px; }
+    .home-hero p { font-size: 1.12rem; color: var(--muted); max-width: 620px; margin: 0; }
+
+    .hero-image {
+      min-height: 390px;
+      border-radius: 16px;
+      background: linear-gradient(rgba(0,0,0,.08), rgba(0,0,0,.08)), url('https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=1200&q=85') center/cover;
+      box-shadow: 0 18px 45px rgba(0,0,0,.09);
+    }
+
+    .section {
+      max-width: var(--max);
+      margin: auto;
+      padding: 32px 24px 90px;
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 20px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 15px;
+      margin-bottom: 26px;
+    }
+    .section-heading h2 { margin: 0; font-size: 1.65rem; }
+    .section-heading span { color: var(--muted); font-size: .9rem; }
+
+    .post-card {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 30px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+    .post-card:hover { transform: translateY(-3px); box-shadow: 0 15px 35px rgba(0,0,0,.07); }
+    .post-card-image {
+      min-height: 250px;
+      background: url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=900&q=85') center/cover;
+    }
+    .post-card-content { padding: 32px 32px 32px 0; }
+    .post-card h3 { margin: 8px 0 12px; font-size: 2rem; }
+    .post-card p { color: var(--muted); margin: 0 0 18px; }
+    .read-link { color: var(--accent); font-weight: 700; font-size: .9rem; }
+
+    .article-wrap { max-width: 850px; margin: auto; padding: 72px 24px 100px; }
+    .article-kicker { color: var(--accent); font-size: .78rem; font-weight: 800; letter-spacing: .11em; text-transform: uppercase; }
+    .article-title { font-size: clamp(2.8rem, 6vw, 5.4rem); margin: 14px 0 28px; max-width: 900px; }
+
+    .byline {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 18px 0 25px;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 38px;
+    }
+    .avatar {
+      width: 48px; height: 48px; border-radius: 50%;
+      background: #171717;
+      color: white;
+      display: grid; place-items: center;
+      font-weight: 800;
+      flex: 0 0 auto;
+    }
+    .byline strong { display: block; font-size: .96rem; }
+    .byline small { color: var(--muted); font-size: .82rem; }
+
+    .article-image {
+      width: 100%;
+      aspect-ratio: 16/8;
+      object-fit: cover;
+      border-radius: 14px;
+      display: block;
+      margin: 0 0 42px;
+    }
+
+    .article-body { font-family: Georgia, "Times New Roman", serif; font-size: 1.16rem; }
+    .article-body h2 {
+      font-family: Inter, ui-sans-serif, sans-serif;
+      font-size: 1.65rem;
+      margin: 52px 0 14px;
+      letter-spacing: -.025em;
+    }
+    .article-body p { margin: 0 0 24px; }
+    .article-body .lead { font-size: 1.28rem; color: #333; }
+    .back { margin-bottom: 30px; }
+    .back button {
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      padding: 0;
+    }
+    .back button:hover { color: var(--text); }
+
+    footer {
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      text-align: center;
+      padding: 28px 24px;
+      font-size: .82rem;
+    }
+
+    @media (max-width: 760px) {
+      .nav { min-height: 64px; }
+      .home-hero { grid-template-columns: 1fr; padding-top: 58px; gap: 35px; }
+      .hero-image { min-height: 260px; }
+      .post-card { grid-template-columns: 1fr; }
+      .post-card-image { min-height: 220px; }
+      .post-card-content { padding: 25px; }
+      .article-wrap { padding-top: 48px; }
+      .article-title { font-size: 3rem; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav">
+      <button class="brand" onclick="showPage('home')" aria-label="Go to home">
+        <span class="brand-name">Joel Engelman</span>
+        <span class="brand-sub">Blog &amp; reporting</span>
+      </button>
+      <nav>
+        <button onclick="showPage('home')">Home</button>
+        <button onclick="showPage('post')">Latest post</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section id="home" class="page active">
+      <div class="home-hero">
+        <div>
+          <div class="eyebrow">Joel Engelman</div>
+          <h1>Thoughts, ideas and writing.</h1>
+          <p>A simple place for my articles, opinions and reporting. New posts will be added here as I write them.</p>
+        </div>
+        <div class="hero-image" role="img" aria-label="Notebook and pen on a desk"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-heading">
+          <h2>Latest article</h2>
+          <span>September 1, 2026</span>
+        </div>
+
+        <article class="post-card" onclick="showPage('post')" tabindex="0" onkeydown="if(event.key==='Enter') showPage('post')">
+          <div class="post-card-image"></div>
+          <div class="post-card-content">
+            <div class="eyebrow">Education</div>
+            <h3>Your Title</h3>
+            <p>An argument for giving primary school students more time for creative subjects, including art, music and drama.</p>
+            <span class="read-link">Read article →</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="post" class="page">
+      <article class="article-wrap">
+        <div class="back"><button onclick="showPage('home')">← Back to home</button></div>
+        <div class="article-kicker">Education · Opinion</div>
+        <h1 class="article-title">Your Title</h1>
+
+        <div class="byline">
+          <div class="avatar">JE</div>
+          <div>
+            <strong>Joel Engelman</strong>
+            <small>Professional Reporter · September 1, 2026</small>
+          </div>
+        </div>
+
+        <img class="article-image" src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1400&q=85" alt="Students learning together in a classroom">
+
+        <div class="article-body">
+          <p class="lead">Primary schools should give students more time for creative subjects because art, music and drama can support students' learning rather than simply taking time away from academic subjects.</p>
+
+          <h2>Argument 1</h2>
+          <p>Primary schools should give students more time for creative subjects because art, music and drama can support students' learning rather than simply taking time away from academic subjects. The UK's Education Endowment Foundation (EEF) reviewed 80 studies on arts participation, including art, music, drama and dance. Their research found that students who participated in arts activities made, on average, the equivalent of about three additional months of academic progress compared with students who did not participate. The benefits were found across subjects including English, maths and science. This suggests that creative subjects do not necessarily take away from academic learning and can actually support students' overall development.</p>
+
+          <h2>Argument 2</h2>
+          <p>Primary schools should also provide more time for music because musical training can help children develop important thinking and self-management skills. A 2025 meta-analysis examined 46 studies involving 3,530 children and found a statistically significant improvement in children's executive functions following musical training. Executive functions include skills such as working memory, attention, planning, controlling impulses and switching between tasks. These skills are important in school because children need to concentrate, remember instructions, manage distractions and plan their work. Therefore, giving students more opportunities to learn music could help them develop skills that are useful both inside and outside the classroom.</p>
+
+          <h2>Argument 3</h2>
+          <p>Finally, primary schools should give students more time for creative subjects because they provide opportunities for children to express themselves, develop creativity and become more confident. UNESCO identifies arts education as supporting skills including creativity, critical thinking, empathy and collaboration. Research into drama education has also found links between drama activities and skills such as communication, collaboration, imagination and independent thinking. Creative subjects allow students to experiment with their own ideas instead of always having to find one correct answer, while performing, creating artwork and making music can give children opportunities to express themselves. Therefore, more time for creative subjects could help children develop important personal and social skills alongside their academic abilities.</p>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <footer>
+    © 2026 Joel Engelman · All rights reserved
+  </footer>
+
+  <script>
+    function showPage(page) {
+      document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
+      document.getElementById(page).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      history.replaceState(null, '', page === 'post' ? '#post' : '#home');
+    }
+
+    if (window.location.hash === '#post') showPage('post');
+  </script>
+</body>
+</html>
